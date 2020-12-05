@@ -13,9 +13,10 @@ public class Solution {
         Solution solution = new Solution(args);
 
         int result = solution.romanToInt("III");
+        System.out.println(result);
     }
 
-    // Q1
+    //Q1
     public int[] TwoSum(int[] nums, int target) {
         //暴力解法
         // int numsLength=nums.Length;
@@ -91,13 +92,77 @@ public class Solution {
 
     //Q13
     public int romanToInt(String s) {
-        Hashtable romanTable = new Hashtable();
-        romanTable.put("I", 1);
-        romanTable.put("V", 5);
-        romanTable.put("X", 10);
-        romanTable.put("L", 50);
-        romanTable.put("C", 100);
-        romanTable.put("D", 500);
-        romanTable.put("M", 1000);
+        int result = 0;
+        int numberLen=s.length();
+        for (int i = 0; i < numberLen; i++) {
+            char single = s.charAt(i);
+            char next;
+            switch (single) {
+                case 'I':
+                    if(i!=numberLen-1){
+                        next = s.charAt(i + 1);
+                        if (next == 'V') {
+                            result += 4;
+                            i++;
+                        } else if (next == 'X') {
+                            result += 9;
+                            i++;
+                        } else {
+                            result += 1;
+                        }
+                    }else {
+                        result += 1;
+                    }
+                    break;
+                case 'X':
+                    if(i!=numberLen-1){
+                        next = s.charAt(i + 1);
+                        if (next == 'L') {
+                            result += 40;
+                            i++;
+                        } else if (next == 'C') {
+                            result += 90;
+                            i++;
+                        } else {
+                            result += 10;
+                        }
+                    }else {
+                        result += 10;
+                    }
+                    break;
+                case 'C':
+                    if(i!=numberLen-1){
+                        next = s.charAt(i + 1);
+                        if (next == 'D') {
+                            result += 400;
+                            i++;
+                        } else if (next == 'M') {
+                            result += 900;
+                            i++;
+                        } else {
+                            result += 100;
+                        }
+                    }else {
+                        result += 100;
+                    }
+                    break;
+                case 'V':
+                    result+=5;
+                    break;
+                case 'L':
+                    result+=50;
+                    break;
+                case 'D':
+                    result+=500;
+                    break;
+                case 'M':
+                    result+=1000;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return result;
     }
 }
