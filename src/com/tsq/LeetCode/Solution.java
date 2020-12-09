@@ -440,6 +440,46 @@ public class Solution {
         return i + 1;
     }
 
+    //Q27
+    public int removeElement(int[] nums, int val) {
+        int j = nums.length;
+        if (j == 0) {
+            return 0;
+        }
+        for (int i = 0; i < j; i++) {
+            if (nums[i] == val) {
+                nums[i] = nums[j - 1];
+                i--;
+                j--;
+            }
+        }
+        return j;
+    }
+
+    //Q28
+    public int strStr(String haystack, String needle) {
+        int needleLength = needle.length();
+        if (needleLength == 0) {
+            return -1;
+        }
+        int hayStackLength = haystack.length();
+        if(needleLength>hayStackLength){
+            return -1;
+        }
+        for (int i = 0; i <= hayStackLength - needleLength; i++) {
+            int j = 0;
+            for (; j < needleLength; j++) {
+                if (haystack.charAt(i + j) != needle.charAt(j)) {
+                    break;
+                }
+            }
+            if (j >= needleLength) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     //Q35
     public int searchInsert(int[] nums, int target) {
         int numsLength = nums.length;
@@ -471,7 +511,7 @@ public class Solution {
 //        l2Head.next = l2Second;
 //        l2Second.next = l2Third;
 
-        System.out.println(solution.removeDuplicates(new int[]{0}));
+        System.out.println(solution.strStr("aaaaa", "bba"));
 //        ListNode headNode = solution.mergeTwoLists(l1Head, l2Head);
     }
 }
