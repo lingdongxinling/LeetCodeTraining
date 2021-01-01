@@ -463,7 +463,7 @@ public class Solution {
             return -1;
         }
         int hayStackLength = haystack.length();
-        if(needleLength>hayStackLength){
+        if (needleLength > hayStackLength) {
             return -1;
         }
         for (int i = 0; i <= hayStackLength - needleLength; i++) {
@@ -478,6 +478,49 @@ public class Solution {
             }
         }
         return -1;
+    }
+
+    public int[] GetNext(String p) {
+        int[] next = new int[p.length()];
+        next[0] = -1;
+        int pLength = p.length();
+        int k = -1;
+        int j = 0;
+        while (j < pLength - 1) {
+            if (k == -1 || p.charAt(k) == p.charAt(j)) {
+                ++k;
+                ++j;
+                if (p.charAt(j) != p.charAt(k)) {
+                    next[j] = k;
+                } else {
+                    next[j] = next[k];
+                }
+            } else {
+                k = next[k];
+            }
+        }
+        return next;
+    }
+
+    public int KMPSearch(String s, String p) {
+        int sLen = s.length();
+        int pLen = p.length();
+        int i = 0;
+        int j = 0;
+        int[] next = GetNext(p);
+        while (i < sLen && j < pLen) {
+            if (j == -1 || s.charAt(i) == p.charAt(j)) {
+                i++;
+                j++;
+            } else {
+                j = next[j];
+            }
+        }
+        if (j == pLen) {
+            return i - j;
+        } else {
+            return -1;
+        }
     }
 
     //Q35
@@ -496,6 +539,37 @@ public class Solution {
         return answer;
     }
 
+    //Q38
+    public String countAndSay(int n) {
+        if (n == 1) {
+            return "1";
+        }
+
+        String last = "1";
+        int i = 2;
+        int j;
+        int count = 0;
+        char lastChar = '\0';
+        StringBuffer tempLast;
+        while (i++ <= n) {
+            lastChar = last.charAt(0);
+            tempLast = new StringBuffer();
+            count = 1;
+            for (j = 1; j < last.length(); j++) {
+                if (lastChar != last.charAt(j)) {
+                    tempLast.append(count).append(lastChar);
+                    lastChar = last.charAt(j);
+                    count = 1;
+                } else {
+                    count++;
+                }
+            }
+            last = tempLast.append(count).append(lastChar).toString();
+        }
+
+        return last.toString();
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution(args);
 
@@ -511,7 +585,8 @@ public class Solution {
 //        l2Head.next = l2Second;
 //        l2Second.next = l2Third;
 
-        System.out.println(solution.strStr("aaaaa", "bba"));
+//        System.out.println(solution.strStr("aaaaa", "bba"));
 //        ListNode headNode = solution.mergeTwoLists(l1Head, l2Head);
+        System.out.println(solution.countAndSay(10));
     }
 }
