@@ -570,6 +570,119 @@ public class Solution {
         return last.toString();
     }
 
+    //Q53
+    public int maxSubArray(int[] nums) {
+        //动态规划
+//        int pre = 0;
+//        int max = nums[0];
+//        for (int num : nums) {
+//            pre = Math.max(pre + num, num);
+//            max = Math.max(max, pre);
+//        }
+//
+//        return max;
+
+        //分治法
+        return GetInfo(nums, 0, nums.length - 1).mSum;
+    }
+
+    public Status GetInfo(int[] a, int l, int r) {
+        if (l == r) {
+            return new Status(a[l], a[l], a[l], a[l]);
+        }
+        int m = (l + r) >> 1;
+        Status lSub = GetInfo(a, l, m);
+        Status rSub = GetInfo(a, m + 1, r);
+        return PushUp(lSub, rSub);
+    }
+
+    public Status PushUp(Status l, Status r) {
+        int iSum = l.iSum + r.iSum;
+        int lSum = Math.max(l.lSum, l.iSum + r.lSum);
+        int rSum = Math.max(r.rSum, r.iSum + l.rSum);
+        int mSum = Math.max(Math.max(l.mSum, r.mSum), l.rSum + r.lSum);
+        return new Status(lSum, rSum, mSum, iSum);
+    }
+
+    public class Status {
+        public int lSum, rSum, mSum, iSum;
+
+        public Status(int lSum, int rSum, int mSum, int iSum) {
+            this.lSum = lSum;
+            this.rSum = rSum;
+            this.mSum = mSum;
+            this.iSum = iSum;
+        }
+    }
+
+    //Q58
+    public int lengthOfLastWord(String s) {
+        int end = s.length() - 1;
+        while (end >= 0 && s.charAt(end) == ' ') {
+            end--;
+        }
+        int start = end;
+        while (start >= 0 && s.charAt(start) != ' ') {
+            start--;
+        }
+
+        return end - start;
+    }
+
+    //Q66
+    public int[] plusOne(int[] digits) {
+        int dLen = digits.length;
+        if(digits[dLen-1]!=9){
+            digits[dLen-1]=digits[dLen-1]+1;
+            return digits;
+        }else{
+            digits[dLen-1]=10;
+        }
+
+        boolean jinwei=false;
+        for(int i=dLen-1;i>=1;i--){
+            if(digits[i]==10){
+                digits[i]=0;
+                digits[i-1]=digits[i-1]+1;
+            }
+        }
+
+        if(digits[0]==10){
+            int[] newDigits = new int[dLen + 1];
+            newDigits[0] = 1;
+            digits[0] = 0;
+            for (int i = 0; i < dLen; i++) {
+                newDigits[i + 1] = digits[i];
+            }
+            return newDigits;
+        }
+
+        return digits;
+//        for (int i = dLen - 1; i >= 0; i--) {
+//            if(digits[i]!=9){
+//                digits[i]=digits[i]+1;
+//                return digits;
+//            }
+//
+//            digits[i]=0;
+//            if(i>0){
+//                digits[i-1]
+//            }
+//        }
+
+//        if (digits[0] == 0) {
+//            int[] newDigits = new int[dLen + 1];
+//            newDigits[0] = 1;
+//            digits[0] = 0;
+//            for (int i = 0; i < dLen; i++) {
+//                newDigits[i + 1] = digits[i];
+//            }
+//            return newDigits;
+//        } else {
+//            return digits;
+//        }
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution(args);
 
@@ -587,6 +700,7 @@ public class Solution {
 
 //        System.out.println(solution.strStr("aaaaa", "bba"));
 //        ListNode headNode = solution.mergeTwoLists(l1Head, l2Head);
-        System.out.println(solution.countAndSay(10));
+        int[] digits = solution.plusOne(new int[]{9,9});
+//        System.out.println(solution.plusOne(new int[]{1, 2, 3}));
     }
 }
