@@ -1,7 +1,6 @@
 package com.tsq.LeetCode;
 
-import java.util.Hashtable;
-import java.util.Stack;
+import java.util.*;
 
 public class Solution {
     private String[] args;
@@ -632,22 +631,22 @@ public class Solution {
     //Q66
     public int[] plusOne(int[] digits) {
         int dLen = digits.length;
-        if(digits[dLen-1]!=9){
-            digits[dLen-1]=digits[dLen-1]+1;
+        if (digits[dLen - 1] != 9) {
+            digits[dLen - 1] = digits[dLen - 1] + 1;
             return digits;
-        }else{
-            digits[dLen-1]=10;
+        } else {
+            digits[dLen - 1] = 10;
         }
 
-        boolean jinwei=false;
-        for(int i=dLen-1;i>=1;i--){
-            if(digits[i]==10){
-                digits[i]=0;
-                digits[i-1]=digits[i-1]+1;
+        boolean jinwei = false;
+        for (int i = dLen - 1; i >= 1; i--) {
+            if (digits[i] == 10) {
+                digits[i] = 0;
+                digits[i - 1] = digits[i - 1] + 1;
             }
         }
 
-        if(digits[0]==10){
+        if (digits[0] == 10) {
             int[] newDigits = new int[dLen + 1];
             newDigits[0] = 1;
             digits[0] = 0;
@@ -683,6 +682,344 @@ public class Solution {
 //        }
     }
 
+    //Q67
+    public String addBinary(String a, String b) {
+        int aLen = a.length();
+        int bLen = b.length();
+        String longStr = aLen > bLen ? a : b;
+        String shortStr = aLen > bLen ? b : a;
+        int longLen = longStr.length();
+        int shortLen = shortStr.length();
+        int[] results = new int[longLen + 1];
+        for (int i = 0; i <= longLen; i++) {
+            results[i] = 0;
+        }
+
+        for (int i = 0; i < shortLen; i++) {
+            int longPos = longLen - i;
+            int shortPos = shortLen - i;
+            int currentPosValue = results[longPos] + ((int) longStr.charAt(longPos - 1) - (int) ('0')) + ((int) shortStr.charAt(shortPos - 1) - (int) ('0'));
+            switch (currentPosValue) {
+                case 0:
+                case 1:
+                    results[longPos] = currentPosValue;
+                    break;
+                case 2:
+                case 3:
+                    results[longPos] = currentPosValue - 2;
+                    results[longPos - 1] = 1;
+                    break;
+            }
+        }
+
+        for (int i = 0; i < longLen - shortLen; i++) {
+            int currentPos = longLen - shortLen - i;
+            int currentPosValue = results[currentPos] + ((int) longStr.charAt(currentPos - 1) - (int) ('0'));
+            switch (currentPosValue) {
+                case 0:
+                case 1:
+                    results[currentPos] = currentPosValue;
+                    break;
+                case 2:
+                case 3:
+                    results[currentPos] = currentPosValue - 2;
+                    results[currentPos - 1] = 1;
+                    break;
+            }
+        }
+
+        StringBuffer resultBuffer = new StringBuffer();
+        if (results[0] == 1) {
+            resultBuffer.append(results[0]);
+        }
+        for (int i = 1; i <= longLen; i++) {
+            resultBuffer.append(results[i]);
+        }
+        return resultBuffer.toString();
+    }
+
+    public String addBinary2(String a, String b) {
+        StringBuffer ans = new StringBuffer();
+
+        int n = Math.max(a.length(), b.length());
+        int carry = 0;
+        for (int i = 0; i < n; ++i) {
+            carry = carry + (i < a.length() ? (a.charAt(a.length() - 1 - i) - '0') : 0);
+            carry = carry + (i < b.length() ? (b.charAt(b.length() - 1 - i) - '0') : 0);
+            ans.append((char) (carry % 2 + '0'));
+            carry = carry / 2;
+        }
+
+        if (carry > 0) {
+            ans.append('1');
+        }
+        ans.reverse();
+
+        return ans.toString();
+    }
+
+    public String addBinaryBit(String a, String b) {
+        int aBin = Integer.parseInt(a, 2);
+        int bBin = Integer.parseInt(b, 2);
+
+        int answer, carry;
+
+        while (bBin > 0) {
+            answer = aBin ^ bBin;
+            carry = (aBin & bBin) << 1;
+            aBin = answer;
+            bBin = carry;
+        }
+
+        return Integer.toBinaryString(aBin);
+    }
+
+    //Q69
+    public int mySqrt(int x) {
+        int i = 1;
+        while (true) {
+            if (Math.pow(i, 2) > x) {
+                return i - 1;
+            }
+            i++;
+        }
+    }
+
+    public int mySqrtMid(int x) {
+        int left = 0, right = x, result = -1, mid;
+        while (left <= right) {
+            mid = (right + left) / 2;
+            if ((long) (mid * mid) <= x) {
+                result = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return result;
+    }
+
+    //Q70
+    public long climbStairs(int n) {
+        //Method 1
+        int p = 0, q = 0, r = 1;
+        for (int i = 1; i <= n; i++) {
+            p = q;
+            q = r;
+            r = p + q;
+        }
+        return r;
+    }
+
+    //Q83
+    public ListNode deleteDuplicates(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+
+        ListNode currNode = head;
+
+        while (currNode.next != null) {
+            if (currNode.next.val == currNode.val) {
+                currNode.next = currNode.next.next;
+            } else {
+                currNode = currNode.next;
+            }
+        }
+
+        return head;
+    }
+
+    //Q88
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+//        if (m + n <= 1) {
+//            if (n == 1) {
+//                nums1 = nums2;
+//            }
+//            return;
+//        }
+//
+//        int mCurr = 0;
+//        int nCurr = 0;
+//        for (mCurr = 0; mCurr < m + n; mCurr++) {
+//            if (nums1[mCurr] < nums2[nCurr]) {
+//                continue;
+//            }
+//
+//            for (int mHere = m + n - 1; mHere >= mCurr + 2; mHere--) {
+//                nums1[mHere] = nums1[mHere - 1];
+//            }
+//
+//            nums1[++mCurr] = nums2[nCurr++];
+//            mCurr--;
+//        }
+//
+//        for (mCurr = 1; mCurr < m + n; mCurr++) {
+//            if (nums1[mCurr] < nums1[mCurr - 1]) {
+//                break;
+//            }
+//        }
+//
+//        for (; mCurr < m + n; mCurr++) {
+//            nums1[mCurr] = nums2[nCurr++];
+//        }
+        int p1 = m - 1;
+        int p2 = n - 1;
+        int p = m + n - 1;
+
+        while (p1 >= 0 && p2 >= 0) {
+            nums1[p--] = (nums1[p1] < nums2[p2]) ? nums2[p2--] : nums1[p1--];
+        }
+
+        System.arraycopy(nums2, 0, nums1, 0, p2 + 1);
+    }
+
+    //Q100
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        //深度搜索
+//        if (p == null && q == null) {
+//            return true;
+//        }
+//
+//        if ((p == null && q != null) || (p != null && q == null) || (p.val != q.val)) {
+//            return false;
+//        }
+//
+//        if (!isSameTree(p.left, q.left) || !isSameTree(p.right, q.right)) {
+//            return false;
+//        }
+//
+//        return true;
+
+        //广度搜索
+        if (p == null && q == null) {
+            return true;
+        } else if (p == null || q == null) {
+            return false;
+        }
+
+        Queue<TreeNode> queue1 = new LinkedList<>();
+        Queue<TreeNode> queue2 = new LinkedList<>();
+        queue1.offer(p);
+        queue2.offer(q);
+        while (!queue1.isEmpty() && !queue2.isEmpty()) {
+            TreeNode node1 = queue1.poll();
+            TreeNode node2 = queue2.poll();
+            if (node1.val != node2.val) {
+                return false;
+            }
+
+            TreeNode left1 = node1.left;
+            TreeNode right1 = node1.right;
+            TreeNode left2 = node2.left;
+            TreeNode right2 = node2.right;
+
+            if (left1 == null ^ left2 == null) {
+                return false;
+            }
+            if (right1 == null ^ right2 == null) {
+                return false;
+            }
+            if (left1 != null) {
+                queue1.offer(left1);
+            }
+            if (right1 != null) {
+                queue1.offer(right1);
+            }
+            if (left2 != null) {
+                queue2.offer(left2);
+            }
+            if (right2 != null) {
+                queue2.offer(right2);
+            }
+        }
+
+        return queue1.isEmpty() && queue2.isEmpty();
+    }
+
+    //Q101
+    public boolean isSymmetric(TreeNode root) {
+        //递归
+//        return CheckNode(root.left, root.right);
+        //迭代
+        return CheckNode(root, root);
+    }
+
+    private boolean CheckNode(TreeNode p, TreeNode q) {
+        //递归
+//        if (p == null && q == null) {
+//            return true;
+//        } else if (p == null || q == null) {
+//            return false;
+//        } else if (p.val != q.val) {
+//            return false;
+//        } else if (!CheckNode(p.left, q.right)) {
+//            return false;
+//        } else if (!CheckNode(p.right, q.left)) {
+//            return false;
+//        } else {
+//            return true;
+//        }
+        //迭代
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(p);
+        queue.offer(q);
+
+        while (!queue.isEmpty()) {
+            TreeNode u = queue.poll();
+            TreeNode v = queue.poll();
+
+            if (u == null && v == null) {
+                continue;
+            }
+            if (u == null || v == null || u.val != v.val) {
+                return false;
+            }
+
+            queue.offer(u.left);
+            queue.offer(v.right);
+            queue.offer(u.right);
+            queue.offer(v.left);
+        }
+
+        return true;
+    }
+
+    //Q104
+    public int maxDepth(TreeNode root) {
+        //深度优先
+        if (root == null) {
+            return 0;
+        }
+        int leftHeight = maxDepth(root.left);
+        int rightHeight = maxDepth(root.right);
+        return Math.max(leftHeight, rightHeight) + 1;
+
+        //广度优先
+//        if (root == null) {
+//            return 0;
+//        }
+//
+//        Queue<TreeNode> queue = new LinkedList<>();
+//        queue.offer(root);
+//        int ans=0;
+//        while (!queue.isEmpty()){
+//            int size=queue.size();
+//            while(size>0){
+//                TreeNode node=queue.poll();
+//                if(node.left!=null){
+//                    queue.offer(node.left);
+//                }
+//                if(node.right!=null){
+//                    queue.offer(node.right);
+//                }
+//                size--;
+//            }
+//            ans++;
+//        }
+//        return ans;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution(args);
 
@@ -700,7 +1037,32 @@ public class Solution {
 
 //        System.out.println(solution.strStr("aaaaa", "bba"));
 //        ListNode headNode = solution.mergeTwoLists(l1Head, l2Head);
-        int[] digits = solution.plusOne(new int[]{9,9});
-//        System.out.println(solution.plusOne(new int[]{1, 2, 3}));
+//        int[] digits = solution.plusOne(new int[]{9,9});
+        long startTime = System.currentTimeMillis();
+
+//        ListNode head = new ListNode(1);
+//        ListNode head2 = new ListNode(1);
+//        ListNode head3 = new ListNode(2);
+//        ListNode head4 = new ListNode(3);
+//        ListNode head5 = new ListNode(3);
+//        head.next = head2;
+//        head2.next = head3;
+//        head3.next = head4;
+//        head4.next = head5;
+        TreeNode p = new TreeNode(3);
+        TreeNode p1 = new TreeNode(9);
+        TreeNode p2 = new TreeNode(20);
+        TreeNode p3 = new TreeNode(15);
+        TreeNode p4 = new TreeNode(7);
+        p.left = p1;
+        p.right = p2;
+        p2.left = p3;
+        p2.right = p4;
+
+        System.out.println(solution.maxDepth(p));
+//        solution.merge(new int[]{0}, 0, new int[]{1}, 1);
+
+        long endTime = System.currentTimeMillis();
+        System.out.println((endTime - startTime) + "ms");
     }
 }
